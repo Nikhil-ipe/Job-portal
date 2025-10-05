@@ -1,28 +1,12 @@
 import mongoose from "mongoose";
 
-let isConnected = false; // track the connection
-
+// Function to connect to the MongoDb database
 const connectDB = async () => {
-  if (isConnected) {
-    // console.log("MongoDB already connected");
-    return;
-  }
 
-  try {
-    const db = await mongoose.connect(process.env.MONGODB_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    mongoose.connection.on('connected', () => console.log('Database Connected'))
 
-    isConnected = db.connections[0].readyState === 1;
+    await mongoose.connect(process.env.MONGODB_URI)
 
-    if (isConnected) {
-      console.log("✅ Database Connected");
-    }
-  } catch (error) {
-    console.error("❌ Database connection error:", error);
-    throw new Error("Database connection failed");
-  }
-};
+}
 
-export default connectDB;
+export default connectDB
